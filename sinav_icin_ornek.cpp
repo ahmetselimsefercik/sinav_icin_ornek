@@ -2,12 +2,15 @@
 #include "conio.h"
 #include "string.h"
 
+
 void TusaBas(int tus_sayisi); // fonksiyonların tanımlanması
 void Ucgenler();
-void firstU();
-void secondU();
-void thirdU();
-void fourthU();
+void firstU(int satir);
+void secondU(int satir);
+void thirdU(int satir);
+void fourthU(int satir);
+int satirSayisi();
+int elemanSayisi();
 
 int k = 9, s = 1; // aşağıda fonksiyonlarda genel olarak kullanıldıkları için buraya yazıldı
 
@@ -17,12 +20,13 @@ void main()
     char User1_pswrd[5], User2_pswrd[5];                                                                // şifrelerin oluşturulması
     int isUser = 1, is_pswrd = 1, ucgen, fib1 = 1, fib2 = 1, fibn, wrng_ucgn = 1, range, fib_cntrl = 1; // koddda kullanılan verilerin tanımlanması
 
-    strcpy(User_check1, "ucgen"); // kullanıcılara isim şifreye sayıların atanması
-    strcpy(User_check2, "fibonacci");  //strcpy()  "string.h" kütüphanesinin bir fonksiyonudur
+    strcpy(User_check1, "ucgen");     // kullanıcılara isim şifreye sayıların atanması
+    strcpy(User_check2, "fibonacci"); // strcpy()  "string.h" kütüphanesinin bir fonksiyonudur
     strcpy(User1_pswrd, "1234");
     strcpy(User2_pswrd, "9876");
 
-    char User[10], password[5]; // kullanıcının girmesi için oluşturukan char lar
+    char User[10], password[5], yildiz = '*';
+    ; // kullanıcının girmesi için oluşturukan char lar
 
     do
     {
@@ -33,7 +37,7 @@ void main()
         else
         {
             isUser = 0; // eğer kullanıcı isimleri uyuşmuyorsa do while döngüsü ile tekrar başa dönmek için kontrol değişkenine değişiklik yapılması
-            printf("Kullanici buunamadi tekrar deneyin.\n");
+            printf("Kullanici bulunamadi tekrar deneyin.\n");
         }
 
     } while (isUser == 0); // eğer kullanıcı ismi hatalı girildiyse döngü baştan alınır
@@ -41,20 +45,25 @@ void main()
     do
     {
         printf("Sifrenizi giriniz: ");
-        scanf_s("%s", password, sizeof(password)); // kullanıcının şifreyi girmesi ve password değişkenine atanması
+        for (int i = 0; i < 4; i++)
+        {
+            password[i] = _getch();
+            _putch(yildiz);
+        }
+        password[4] = '\0'; // kullanıcının şifreyi girmesi ve password değişkenine atanması
+
         if (strcmp(password, User1_pswrd) == 0 && strcmp(User, User_check1) == 0 || strcmp(password, User2_pswrd) == 0 && strcmp(User, User_check2) == 0)
             is_pswrd = 1; // buradaki if kısmında kullanıcıyla beraber şifre uyuşuyorsa kontrol değişkenine 1 (DOĞRU) atanır
         else
         {
             is_pswrd = 0; // şifre yanlışsa kontrol değişkenine 0 (YANLIŞ) atanır
-            printf("Sifre yanlis tekrar deneyin.\n");
+            printf("\nSifre yanlis tekrar deneyin.\n");
         }
-
     } while (is_pswrd == 0); // kontrol değişkeni (yani kullanıcının girdği şifre) yanlışsa döngü baştan başlar
 
     if (strcmp(User, User_check1) == 0) // eğer kullanıcı "ucgen" kullanıcı adı ile giriş yaptıysa program buradan devam eder "fibonacci" ile giriş yaptıysa 85. satırdan devam eder"
     {
-        printf("1.    2.    3.    4.\n");
+        printf("\n1.    2.    3.    4.\n");
         Ucgenler(); // 137. satırda başlayan Ucgenler() fonksiyonu çalıştırılır
         printf("buyuk olcekte yazdirmak istediginiz ucgeni secin: ");
         do
@@ -63,16 +72,16 @@ void main()
             switch (ucgen)         // switch fonksiyonu ile yazdırılmak istenen üçgen yazdırılır
             {
             case 1:
-                firstU();
+                firstU(satirSayisi());
                 break;
             case 2:
-                secondU();
+                secondU(satirSayisi());
                 break;
             case 3:
-                thirdU();
+                thirdU(satirSayisi());
                 break;
             case 4:
-                fourthU();
+                fourthU(satirSayisi());
                 break;
             default:
                 printf("Yanlis numara girdiniz tekrar deneyin: "); // yazdırılmak istenen ucgen değeri 1-4 aralığında değilse tekrar do while döngüsyle giriş sağlanır
@@ -84,7 +93,7 @@ void main()
     }
     else
     {
-        printf("%d, %d", fib1, fib2); // fibonacci dizisinin örnek amaçlı ilk 10 elemanı yazdırılır
+        printf("\n %d, %d", fib1, fib2); // fibonacci dizisinin örnek amaçlı ilk 10 elemanı yazdırılır
         for (size_t i = 1; i <= 8; i++)
         {
             fibn = fib1 + fib2;
@@ -97,7 +106,7 @@ void main()
         {
             scanf_s("%d %d", &fib1, &fib2); // dizinin ilk iki elemanı alınır
 
-            if (fib1 >= fib2) // ilk eleman ikinci elemandan küçük mü diye kontrol edilir
+            if (fib1 >= fib2 || fib1 < 0) // ilk eleman ikinci elemandan küçük mü diye kontrol edilir
             {
                 printf("Ilk sayinizi kucuk giriniz:");
                 fib_cntrl = 0;
@@ -107,7 +116,7 @@ void main()
         } while (fib_cntrl == 0);
 
         printf("Fibonacci dizisinde kac tane eleman olmasini istersiniz: "); // dizide kaç eleman olması istendiği yazılır
-        scanf_s("%d", &range);
+        range = elemanSayisi();
 
         printf("%d, %d", fib1, fib2);
         for (size_t i = 1; i <= range - 2; i++) // istenilen sayıda eleman ekrana yazdırılır
@@ -169,9 +178,9 @@ void Ucgenler() // ekrana sırasıyla 4 tane üçgen yapar
         printf("\n");
     }
 }
-void firstU() // büyük üçgenleri yapan fonksiyonlar
+void firstU(int satir) // büyük üçgenleri yapan fonksiyonlar
 {
-    for (int i = 1; i <= 10; i++)
+    for (int i = 1; i <= satir; i++)
     {
         for (int j = 1; j <= i; j++)
         {
@@ -180,15 +189,15 @@ void firstU() // büyük üçgenleri yapan fonksiyonlar
         printf("\n");
     }
 }
-void secondU()
+void secondU(int satir)
 {
-    for (int i = 10; i > 0; i--)
+    for (int i = satir; i > 0; i--)
     {
         for (int k = 1; k < i + 2 - 1; k++)
         {
             printf(" ");
         }
-        for (int j = 1; j <= 11 - i; j++)
+        for (int j = 1; j <= satir + 1 - i; j++)
         {
             printf("*");
         }
@@ -196,9 +205,9 @@ void secondU()
         printf("\n");
     }
 }
-void thirdU()
+void thirdU(int satir)
 {
-    for (int i = 10; i >= 0; i--)
+    for (int i = satir; i >= 0; i--)
     {
         for (int j = 1; j <= i; j++)
         {
@@ -207,11 +216,11 @@ void thirdU()
         printf("\n");
     }
 }
-void fourthU()
+void fourthU(int satir)
 {
-    for (int i = 10; i > 0; i--)
+    for (int i = satir; i > 0; i--)
     {
-        for (int j = 10; j > i; j--)
+        for (int j = satir; j > i; j--)
         {
             printf(" ");
         }
@@ -221,4 +230,43 @@ void fourthU()
         }
         printf("\n");
     }
+}
+int satirSayisi()
+{
+    int str, check;
+
+    printf("Kac satir yazdirmak istiyorsunuz: ");
+    do
+    {
+        scanf_s("%d", &str);
+        if (str < 1)
+        {
+            printf("Degeri 1 den buyuk girin: ");
+            check = 0;
+        }
+        else
+            check = 1;
+
+    } while (check == 0);
+    return str;
+}
+
+int elemanSayisi()
+{
+
+    int range, chck;
+
+    do
+    {
+        scanf_s("%d", &range);
+        if (range < 1 || range > 100)
+        {
+            printf("Lutfen eleman sayisini 1 - 100 araliginda giriniz: ");
+            chck = 0;
+        }
+        else
+            chck = 1;
+
+    } while (chck == 0);
+    return range;
 }
