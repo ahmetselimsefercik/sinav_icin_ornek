@@ -1,7 +1,7 @@
 #include "stdio.h"
 #include "conio.h"
 #include "string.h"
-
+#include <stdlib.h>
 
 void TusaBas(int tus_sayisi); // fonksiyonların tanımlanması
 void Ucgenler();
@@ -44,12 +44,24 @@ void main()
 
     do
     {
+        int i = 0;
         printf("Sifrenizi giriniz: ");
-        for (int i = 0; i < 4; i++)
+        while (i < 4)
         {
             password[i] = _getch();
-            _putch(yildiz);
+
+            if (password[i] == 8)
+            {
+                i--;
+                printf("\b \b", i);
+            }
+            else if (password[i] >= 48 && password[i] <= 57)
+            {
+                _putch(yildiz);
+                i++;
+            }
         }
+
         password[4] = '\0'; // kullanıcının şifreyi girmesi ve password değişkenine atanması
 
         if (strcmp(password, User1_pswrd) == 0 && strcmp(User, User_check1) == 0 || strcmp(password, User2_pswrd) == 0 && strcmp(User, User_check2) == 0)
@@ -73,15 +85,19 @@ void main()
             {
             case 1:
                 firstU(satirSayisi());
+                wrng_ucgn = 1;
                 break;
             case 2:
                 secondU(satirSayisi());
+                wrng_ucgn = 1;
                 break;
             case 3:
                 thirdU(satirSayisi());
+                wrng_ucgn = 1;
                 break;
             case 4:
                 fourthU(satirSayisi());
+                wrng_ucgn = 1;
                 break;
             default:
                 printf("Yanlis numara girdiniz tekrar deneyin: "); // yazdırılmak istenen ucgen değeri 1-4 aralığında değilse tekrar do while döngüsyle giriş sağlanır
@@ -234,11 +250,13 @@ void fourthU(int satir)
 int satirSayisi()
 {
     int str, check;
+    char a[20];
 
     printf("Kac satir yazdirmak istiyorsunuz: ");
     do
     {
-        scanf_s("%d", &str);
+        scanf_s("%s", a, sizeof(a));
+        str = atoi(a);
         if (str < 1)
         {
             printf("Degeri 1 den buyuk girin: ");
@@ -253,12 +271,13 @@ int satirSayisi()
 
 int elemanSayisi()
 {
-
     int range, chck;
+    char a[20];
 
     do
     {
-        scanf_s("%d", &range);
+        scanf_s("%s", a, sizeof(a));
+        range = atoi(a);
         if (range < 1 || range > 100)
         {
             printf("Lutfen eleman sayisini 1 - 100 araliginda giriniz: ");
